@@ -11,14 +11,14 @@ void DataSampler<T>::runSampler()
         T value = 0;
         while (sampleCount < sampleSize)
         {
-            unsigned long ms = millis();
-            if(ms - lastSample_ms >= samplingPeriod_ms)
+            unsigned long us = micros();
+            if(us - lastSample_us >= samplingPeriod_us)
             {
                 samplerCallback(value); // read sample
 
                 sampleList[sampleCount] = value; // save sample
 
-                lastSample_ms = ms;
+                lastSample_us = us;
                 sampleCount++;
             }
         }
@@ -31,7 +31,7 @@ void DataSampler<T>::runSampler()
     Serial.print(F("With a total of "));
     Serial.print(sampleCount);
     Serial.print(F(" samples, averaging "));
-    Serial.print(((float)samplingTime_ms) / sampleCount, 1);
+    Serial.print(((float)samplingTime_ms) / sampleCount, 3);
     Serial.println(F("ms of time between samples"));
 }
 

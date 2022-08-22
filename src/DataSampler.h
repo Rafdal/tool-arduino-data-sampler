@@ -29,7 +29,7 @@ public:
     {
         sampleSize = maxSamples;
         sampleList = new T[sampleSize];
-        samplingPeriod_ms = 1000UL / samplesPerSec; // milliseconds
+        samplingPeriod_us = 1000000UL / samplesPerSec; // microseconds
     }
     ~DataSampler()
     {
@@ -68,8 +68,8 @@ private:
     T* sampleList = NULL;
     unsigned int sampleSize = 0;
 
-    unsigned int samplingPeriod_ms = 0;
-    unsigned long lastSample_ms = 0;
+    unsigned long samplingPeriod_us = 0;
+    unsigned long lastSample_us = 0;
 
 
     unsigned long sampleStart_ms = 0;

@@ -2,8 +2,8 @@
 
 #include <DataSampler.h>
 
-#define MAX_SAMPLES	500		// Sample list size
-#define SAMPLES_PER_SEC	500	// Sampling frequency in Hertz
+#define MAX_SAMPLES	900			// Sample list size
+#define SAMPLES_PER_SEC	2000	// Sampling frequency in Hertz
 
 DataSampler<uint8_t> sampler(MAX_SAMPLES, SAMPLES_PER_SEC);
 
@@ -20,6 +20,7 @@ void setup()
 	delay(1000);
 
 	Serial.println(F("Running sampler..."));
+	delay(100);
 
 	sampler.runSampler(); // Read and save all samples
 

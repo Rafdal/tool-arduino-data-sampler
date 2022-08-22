@@ -64,6 +64,18 @@ public:
         return sampleList[n];
     }
 
+    // Get the timestamṕ of the n-th sample in microseconds
+    inline unsigned long getTimeAxisUS(unsigned int n)
+    {
+        return n * samplingPeriod_us;
+    }
+
+    // Get the timestamṕ of the n-th sample in milliseconds
+    inline float getTimeAxisMS(unsigned int n)
+    {
+        return (n * samplingPeriod_us) / 1000.0f;
+    }
+
 private:
     T* sampleList = NULL;
     unsigned int sampleSize = 0;

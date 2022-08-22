@@ -10,7 +10,7 @@ Storing data directly to SRAM with a fixed size buffer is the fastest way to sav
 
 The main drawback is that we have a limited buffer size restricted to the SRAM capabilities of the microcontroller.
 
-## Example:
+## Example: Sampling at 2kHz with Arduino
 
 Plotted using [Plotly Chart Studio](https://chart-studio.plotly.com/create/#/)
 

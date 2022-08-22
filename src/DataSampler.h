@@ -34,7 +34,16 @@ public:
     ~DataSampler()
     {
         delete[] sampleList;
+        delete[] activationGatePreBuffer;
     }
+
+    /**
+     * @brief Set a circular buffer activation gate 
+     * 
+     * @param gateSize Amount of samples to store (must be smaller than maxSamples)
+     * @param absVariation Max variation umbral to start sampling
+     */
+    void setActivationGate(unsigned int gateSize, T absVariation);
 
     /**
      * @brief Set the callback function to read values
@@ -77,7 +86,13 @@ public:
     }
 
 private:
+    T* activationGatePreBuffer = NULL; // circular buffer
+    T gateMaxVariation = 0;
+    unsigned int gateSize = 0;
+    unsigned int gatePos = 0;
+
     T* sampleList = NULL;
+    unsigned int sampleCount = 0;
     unsigned int sampleSize = 0;
 
     unsigned long samplingPeriod_us = 0;
@@ -87,6 +102,8 @@ private:
     unsigned long sampleStart_ms = 0;
 
     void (*samplerCallback)(T&) = NULL;
+
+    void runActivationGate();
 };
 
 #endif

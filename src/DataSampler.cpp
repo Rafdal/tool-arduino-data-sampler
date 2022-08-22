@@ -3,8 +3,11 @@
 template<typename T>
 void DataSampler<T>::runSampler()
 {
+    sampleCount = 0;
+
+    runActivationGate(); // (If set)
+
     sampleStart_ms = millis();
-    unsigned int sampleCount = 0;
 
     if(samplerCallback != NULL)
     {
@@ -31,9 +34,66 @@ void DataSampler<T>::runSampler()
     Serial.print(F("With a total of "));
     Serial.print(sampleCount);
     Serial.print(F(" samples, averaging "));
-    Serial.print(((float)samplingTime_ms) / sampleCount, 3);
+    Serial.print(((float)samplingTime_ms) / (sampleCount - gateSize), 2);
     Serial.println(F("ms of time between samples"));
 }
+
+
+template<typename T>
+void DataSampler<T>::setActivationGate(unsigned int gateSize, T absVariation)
+{
+    if(gateSize < sampleSize)
+    {
+        this->gateSize = gateSize;
+        activationGatePreBuffer = new T[gateSize];
+        gateMaxVariation = abs(absVariation);
+        gatePos = 0;
+    }
+}
+
+
+template<typename T>
+void DataSampler<T>::runActivationGate()
+{
+    if(activationGatePreBuffer != NULL && samplerCallback != NULL)
+    {
+        Serial.println(F("Running activation gate..."));
+
+        sampleCount = 0;
+        bool firstRun = true;
+        T currentValue = 0;
+        T firstValue = 0;
+        while ((abs(currentValue - firstValue)) <= (gateMaxVariation) || firstRun)
+        {
+            unsigned long us = micros();
+            if(us - lastSample_us >= samplingPeriod_us)
+            {
+                samplerCallback(currentValue); // read sample value
+
+                activationGatePreBuffer[gatePos++] = currentValue; // save sample value
+                
+                lastSample_us = us;
+                if(gatePos == gateSize) // Roll circular buffer
+                {
+                    gatePos = 0;
+                    if(firstRun)
+                    {
+                        firstValue = currentValue;
+                        firstRun = false;
+                    }
+                }
+            }
+        }
+
+        // Store gate buffer data
+        for (unsigned int i = gatePos; i < gateSize; i++)
+            sampleList[sampleCount++] = activationGatePreBuffer[i];
+
+        for (unsigned int i = 0; i < gatePos; i++)
+            sampleList[sampleCount++] = activationGatePreBuffer[i];            
+    }
+}
+
 
 template class DataSampler<float>;
 template class DataSampler<double>;

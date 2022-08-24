@@ -1,5 +1,7 @@
 #include "DataSampler.h"
 
+#include "MovingSpread.h" // for the activation gate
+
 template<typename T>
 void DataSampler<T>::runSampler()
 {
@@ -51,7 +53,6 @@ void DataSampler<T>::setActivationGate(unsigned int gateSize, T absVariation)
     }
 }
 
-
 template<typename T>
 void DataSampler<T>::runActivationGate()
 {
@@ -62,8 +63,8 @@ void DataSampler<T>::runActivationGate()
         sampleCount = 0;
         bool firstRun = true;
         T currentValue = 0;
-        T firstValue = 0;
-        while ((abs(currentValue - firstValue)) <= (gateMaxVariation) || firstRun)
+        MovingSpread<T> ms;
+        while (firstRun || ((abs(currentValue - firstValue)) <= (gateMaxVariation)))
         {
             unsigned long us = micros();
             if(us - lastSample_us >= samplingPeriod_us)

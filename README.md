@@ -15,6 +15,7 @@ The main drawback is that we have a limited buffer size restricted to the SRAM c
 Plotted using [Plotly Chart Studio](https://chart-studio.plotly.com/create/#/)
 
 <img src="https://github.com/Rafdal/tool-arduino-data-sampler/blob/main/imagen.png" alt="Sampled data plot"/>
+[plot](./imagen.png)
 
 ```c++
 
